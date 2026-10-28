@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8 Bamboo Mahjong - Order Food & Drinks</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font - Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mahjong: {
+                            red: '#9B1C1C',
+                            darkred: '#771D1D',
+                            gold: '#D97706',
+                            jade: '#059669',
+                            dark: '#111827',
+                            card: '#1F2937'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111827;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4B5563;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-950 text-gray-100 font-sans min-h-screen pb-28 antialiased selection:bg-red-800 selection:text-white">
+
+    <!-- Top Header -->
+    <header class="sticky top-0 z-30 bg-gray-900/90 backdrop-blur-md border-b border-gray-800 shadow-xl">
+        <div class="max-w-4xl mx-auto px-4 py-3.5 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-700 via-mahjong-red to-red-900 flex items-center justify-center text-white font-extrabold text-xl shadow-lg border border-red-500/30">
+                    🀄
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg sm:text-xl tracking-tight text-white flex items-center gap-2">
+                        8 BAMBOO <span class="text-xs px-2 py-0.5 rounded bg-red-900/60 text-red-300 font-semibold border border-red-700/50">MAHJONG</span>
+                    </h1>
+                    <p class="text-xs text-gray-400">Pesan Makanan & Minuman Langsung ke Meja</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto px-4 pt-5 pb-10">
+
+        <!-- Banner Info / Table Reminder -->
+        <div class="mb-6 p-4 rounded-2xl bg-gradient-to-r from-red-950/70 via-gray-900 to-gray-900 border border-red-900/40 shadow-inner flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="p-2.5 bg-red-900/30 rounded-xl text-red-400 shrink-0">
+                    <i class="fa-solid fa-utensils text-lg"></i>
+                </div>
+                <div>
+                    <h2 class="text-sm font-bold text-gray-200">Sistem Order Digital Quick-Order</h2>
+                    <p class="text-xs text-gray-400">Pilih menu favoritmu, masukkan nomor meja, dan kirim via WhatsApp!</p>
+                </div>
+            </div>
+            <div class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-3 py-1.5 rounded-lg shrink-0 flex items-center gap-1.5">
+                <i class="fa-solid fa-bolt"></i> Respon Cepat Kasir
+            </div>
+        </div>
+
+        <!-- Search & Filter Bar -->
+        <div class="mb-6 space-y-3">
+            <div class="relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                <input type="text" id="searchInput" placeholder="Cari menu makanan, snack, atau minuman..." 
+                    class="w-full pl-10 pr-4 py-2.5 bg-gray-900 border border-gray-800 rounded-xl text-sm focus:outline-none focus:border-red-600 text-gray-200 placeholder-gray-500 transition">
+            </div>
+
+            <!-- Category Tabs -->
+            <div class="flex items-center gap-2 overflow-x-auto hide-scrollbar py-1">
+                <button onclick="filterCategory('all')" id="btn-cat-all" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-red-700 text-white shadow-md transition">
+                    <i class="fa-solid fa-border-all mr-1.5"></i> Semua Menu
+                </button>
+                <button onclick="filterCategory('food')" id="btn-cat-food" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-gray-900 text-gray-400 hover:text-white border border-gray-800 hover:border-gray-700 transition">
+                    <i class="fa-solid fa-bowl-rice mr-1.5 text-amber-500"></i> Makanan (Food)
+                </button>
+                <button onclick="filterCategory('snack')" id="btn-cat-snack" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-gray-900 text-gray-400 hover:text-white border border-gray-800 hover:border-gray-700 transition">
+                    <i class="fa-solid fa-cookie-bite mr-1.5 text-orange-400"></i> Snack
+                </button>
+                <button onclick="filterCategory('beverages')" id="btn-cat-beverages" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-gray-900 text-gray-400 hover:text-white border border-gray-800 hover:border-gray-700 transition">
+                    <i class="fa-solid fa-mug-hot mr-1.5 text-teal-400"></i> Minuman (Drinks)
+                </button>
+            </div>
+        </div>
+
+        <!-- Menu Grid Sections -->
+        <div id="menuContainer" class="space-y-8">
+            <!-- Content standard rendering via JS -->
+        </div>
+
+        <!-- Empty state search -->
+        <div id="emptySearch" class="hidden text-center py-12">
+            <i class="fa-solid fa-magnifying-glass text-4xl text-gray-600 mb-3"></i>
+            <p class="text-gray-400 font-medium">Menu tidak ditemukan</p>
+            <p class="text-xs text-gray-500">Coba cari kata kunci makanan atau minuman lain.</p>
+        </div>
+
+    </main>
+
+    <!-- Floating Bottom Cart Bar -->
+    <div id="floatingCart" class="fixed bottom-0 left-0 right-0 z-40 p-4 bg-gradient-to-t from-black via-gray-950/95 to-transparent backdrop-blur-md transition-all duration-300 transform translate-y-full">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-gradient-to-r from-red-800 to-red-950 rounded-2xl p-3.5 shadow-2xl border border-red-600/40 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 pl-2">
+                    <div class="relative">
+                        <div class="w-10 h-10 rounded-xl bg-red-950 border border-red-500/50 flex items-center justify-center text-red-200">
+                            <i class="fa-solid fa-basket-shopping text-lg"></i>
+                        </div>
+                        <span id="cartBadgeCount" class="absolute -top-2 -right-2 bg-amber-400 text-gray-950 text-xs font-extrabold w-5 h-5 rounded-full flex items-center justify-center shadow">
+                            0
+                        </span>
+                    </div>
+                    <div>
+                        <p class="text-xs text-red-200 font-medium">Total Pesanan</p>
+                        <p id="cartTotalPrice" class="text-base font-extrabold text-white">Rp 0</p>
+                    </div>
+                </div>
+                <button onclick="openCheckoutModal()" class="px-5 py-2.5 bg-amber-400 hover:bg-amber-300 text-gray-950 font-bold text-xs sm:text-sm rounded-xl transition flex items-center gap-2 shadow-lg active:scale-95">
+                    <span>Lihat & Pesan</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Option / Customizer (For items with options like Indomie / Hot or Ice) -->
+    <div id="optionModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 hidden opacity-0 transition-opacity duration-200">
+        <div class="bg-gray-900 border border-gray-800 w-full max-w-lg rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between pb-3 border-b border-gray-800">
+                <h3 id="optionModalTitle" class="text-lg font-bold text-white">Sesuaikan Pesanan</h3>
+                <button onclick="closeOptionModal()" class="text-gray-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <div id="optionModalBody" class="py-4 space-y-4">
+                <!-- Dynamic Content injected here -->
+            </div>
+
+            <div class="pt-3 border-t border-gray-800 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2 bg-gray-800/80 rounded-xl p-1 border border-gray-700">
+                    <button onclick="changeModalQty(-1)" class="w-8 h-8 rounded-lg bg-gray-700 hover:bg-gray-600 flex items-center justify-center text-white font-bold transition">-</button>
+                    <span id="modalQtyVal" class="w-8 text-center text-sm font-bold">1</span>
+                    <button onclick="changeModalQty(1)" class="w-8 h-8 rounded-lg bg-gray-700 hover:bg-gray-600 flex items-center justify-center text-white font-bold transition">+</button>
+                </div>
+                <button onclick="confirmAddOptionToCart()" class="flex-1 py-3 bg-red-700 hover:bg-red-600 text-white font-bold text-sm rounded-xl transition shadow-lg flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-cart-plus"></i>
+                    <span>Tambah ke Keranjang • <span id="modalBtnPrice">Rp 0</span></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Drawer & Order Form Modal -->
+    <div id="checkoutModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 hidden opacity-0 transition-opacity duration-200">
+        <div class="bg-gray-900 border border-gray-800 w-full max-w-xl rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl max-h-[92vh] flex flex-col">
+            
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between pb-3 border-b border-gray-800">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-receipt text-red-500 text-xl"></i>
+                    <h3 class="text-lg font-bold text-white">Ringkasan & Form Pemesanan</h3>
+                </div>
+                <button onclick="closeCheckoutModal()" class="text-gray-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <div class="overflow-y-auto flex-1 py-4 space-y-5 pr-1">
+                <!-- Cart Items List -->
+                <div>
+                    <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 flex justify-between items-center">
+                        <span>Daftar Menu Dipilih</span>
+                        <button onclick="clearCart()" class="text-red-400 hover:text-red-300 normal-case font-normal text-xs flex items-center gap-1">
+                            <i class="fa-regular fa-trash-can"></i> Kosongkan
+                        </button>
+                    </h4>
+                    <div id="checkoutItemsList" class="space-y-2.5">
+                        <!-- Items rendered via JS -->
+                    </div>
+                </div>
+
+                <!-- Customer Details Form -->
+                <div class="bg-gray-950/70 p-4 rounded-2xl border border-gray-800/80 space-y-3">
+                    <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                        <i class="fa-solid fa-user-pen"></i> Informasi Pemesan
+                    </h4>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1 font-medium">Nama Pemesan <span class="text-red-500">*</span></label>
+                            <input type="text" id="custName" placeholder="Contoh: Budi / Siti" required
+                                class="w-full px-3 py-2 bg-gray-900 border border-gray-800 rounded-xl text-sm text-white focus:outline-none focus:border-red-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1 font-medium">Nomor Meja <span class="text-red-500">*</span></label>
+                            <input type="text" id="custTable" placeholder="Contoh: Meja 05 / VIP 2" required
+                                class="w-full px-3 py-2 bg-gray-900 border border-gray-800 rounded-xl text-sm text-white focus:outline-none focus:border-red-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1 font-medium">Nomor WhatsApp / HP <span class="text-red-500">*</span></label>
+                        <input type="tel" id="custPhone" placeholder="Contoh: 081234567890" required
+                            class="w-full px-3 py-2 bg-gray-900 border border-gray-800 rounded-xl text-sm text-white focus:outline-none focus:border-red-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1 font-medium">Catatan Tambahan (Opsional)</label>
+                        <textarea id="custNotes" rows="2" placeholder="Catatan untuk seluruh orderan (misal: mohon diantar bersamaan)..."
+                            class="w-full px-3 py-2 bg-gray-900 border border-gray-800 rounded-xl text-xs text-white focus:outline-none focus:border-red-500 resize-none"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer Total & Actions -->
+            <div class="pt-3 border-t border-gray-800 space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-gray-400">Total Pesanan</span>
+                    <span id="modalTotalPay" class="text-lg font-extrabold text-amber-400">Rp 0</span>
+                </div>
+
+                <button onclick="sendOrderToWhatsApp()" class="w-full py-3.5 px-4 bg-green-600 hover:bg-green-500 text-white font-bold text-sm rounded-xl transition shadow-lg shadow-green-900/30 flex items-center justify-center gap-2 active:scale-95">
+                    <i class="fa-brands fa-whatsapp text-lg"></i>
+                    <span>Kirim Pesanan via WhatsApp</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed top-20 right-4 z-50 bg-gray-800 text-white px-4 py-3 rounded-xl shadow-2xl border border-gray-700 flex items-center gap-3 transition-all duration-300 transform translate-x-full opacity-0 pointer-events-none">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-green-400"></i>
+        <span id="toastMsg" class="text-xs font-medium">Notifikasi</span>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Menu Master Data from PDF
+        const MENU_DATA = [
+            // FOOD
+            {
+                id: 'f1',
+                category: 'food',
+                name: 'Hekeng Rice Bowl with Sambal Matah',
+                price: 35000,
+                desc: 'Hekeng gurih renyah disajikan dengan nasi hangat dan sambal matah segar.',
+                hasOptions: false,
+                image: '🍚'
+            },
+            {
+                id: 'f2',
+                category: 'food',
+                name: 'Chicken Popcorn Rice Bowl with Sambal Matah',
+                price: 30000,
+                desc: 'Ayam popcorn crispy dengan sambal matah krispi di atas nasi pulen.',
+                hasOptions: false,
+                image: '🍗'
+            },
+            {
+                id: 'f3',
+                category: 'food',
+                name: 'Spicy Beef Rice Bowl',
+                price: 40000,
+                desc: 'Daging sapi tumis bumbu pedas manis gurih penyedap rasa.',
+                hasOptions: false,
+                image: '🥩'
+            },
+            {
+                id: 'f4',
+                category: 'food',
+                name: 'Indomie Goreng',
+                price: 12000, // base single
+                desc: 'Indomie Goreng favorit dengan opsi Single / Double & Tambahan Telur / Baso.',
+                hasOptions: true,
+                type: 'indomie',
+                image: '🍜'
+            },
+
+            // SNACK
+            {
+                id: 's1',
+                category: 'snack',
+                name: 'French Fries',
+                price: 20000,
+                desc: 'Kentang goreng gurih renyah disajikan panas.',
+                hasOptions: false,
+                image: '🍟'
+            },
+            {
+                id: 's2',
+                category: 'snack',
+                name: 'Pisang Goreng',
+                price: 20000,
+                desc: 'Pisang goreng manis krispi cocok untuk camilan santai.',
+                hasOptions: false,
+                image: '🍌'
+            },
+            {
+                id: 's3',
+                category: 'snack',
+                name: 'Fried Sausage',
+                price: 25000,
+                desc: 'Sosis goreng lezat dengan saus pelengkap.',
+                hasOptions: false,
+                image: '🌭'
+            },
+            {
+                id: 's4',
+                category: 'snack',
+                name: 'Mix Platter',
+                price: 32000,
+                desc: 'Kombinasi camilan favorit lengkap untuk dinikmati bersama.',
+                hasOptions: false,
+                image: '🍢'
+            },
+
+            // BEVERAGES
+            {
+                id: 'b1',
+                category: 'beverages',
+                name: 'Ice / Hot Tea',
+                price: 5000,
+                desc: 'Teh tawar segar pilihan Es atau Panas.',
+                hasOptions: true,
+                type: 'tea',
+                image: '🍵'
+            },
+            {
+                id: 'b2',
+                category: 'beverages',
+                name: 'Ice / Hot Sweet Tea',
+                price: 6000,
+                desc: 'Teh manis segar pilihan Es atau Panas.',
+                hasOptions: true,
+                type: 'tea',
+                image: '🧋'
+            },
+            {
+                id: 'b3',
+                category: 'beverages',
+                name: 'Mineral Water',
+                price: 7000,
+                desc: 'Air mineral kemasan dingin/netral.',
+                hasOptions: false,
+                image: '💧'
+            },
+            {
+                id: 'b4',
+                category: 'beverages',
+                name: 'Coke Zero',
+                price: 10000,
+                desc: 'Minuman bersoda Coca Cola Zero Sugar.',
+                hasOptions: false,
+                image: '🥤'
+            },
+            {
+                id: 'b5',
+                category: 'beverages',
+                name: 'Badak',
+                price: 18000,
+                desc: 'Minuman sarsaparilla klasik khas cap Badak.',
+                hasOptions: false,
+                image: '🦏'
+            },
+            {
+                id: 'b6',
+                category: 'beverages',
+                name: 'Iced Americano',
+                price: 18000,
+                desc: 'Espresso disajikan dingin segar tanpa gula.',
+                hasOptions: false,
+                image: '☕'
+            },
+            {
+                id: 'b7',
+                category: 'beverages',
+                name: 'Iced Coffee Latte',
+                price: 22000,
+                desc: 'Perpaduan espresso dan susu segar dingin.',
+                hasOptions: false,
+                image: '🥛'
+            },
+            {
+                id: 'b8',
+                category: 'beverages',
+                name: 'Iced Spanish Latte',
+                price: 22000,
+                desc: 'Kopi latte manis creamy khas Spanish latte.',
+                hasOptions: false,
+                image: '🧊'
+            },
+            {
+                id: 'b9',
+                category: 'beverages',
+                name: 'Iced Aren Latte',
+                price: 22000,
+                desc: 'Kopi susu dengan manis alami gula aren asli.',
+                hasOptions: false,
+                image: '🌴'
+            },
+            {
+                id: 'b10',
+                category: 'beverages',
+                name: 'Iced Matcha Latte',
+                price: 32000,
+                desc: 'Matcha jepang berkualitas dipadu susu segar dingin.',
+                hasOptions: false,
+                image: '🍵'
+            }
+        ];
+
+        // Target WhatsApp Number
+        const WA_TARGET_NUMBER = "6285882060803";
+
+        // Global State
+        let cart = [];
+        let currentActiveCategory = 'all';
+        let currentModalItem = null;
+        let modalQty = 1;
+
+        // On Load Initializer
+        window.addEventListener('DOMContentLoaded', () => {
+            renderMenu();
+            setupEventListeners();
+        });
+
+        // Setup Event Listeners
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase().trim();
+                renderMenu(currentActiveCategory, query);
+            });
+
+            // Input listeners for live WA preview update
+            ['custName', 'custTable', 'custPhone', 'custNotes'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) {
+                    el.addEventListener('input', updateWAPreview);
+                }
+            });
+        }
+
+        // Format Currency IDR
+        function formatIDR(amount) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(amount);
+        }
+
+        // Filter Category
+        function filterCategory(cat) {
+            currentActiveCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-red-700', 'text-white', 'shadow-md');
+                btn.classList.add('bg-gray-900', 'text-gray-400', 'border-gray-800');
+            });
+
+            const activeBtn = document.getElementById(`btn-cat-${cat}`);
+            if(activeBtn) {
+                activeBtn.classList.remove('bg-gray-900', 'text-gray-400', 'border-gray-800');
+                activeBtn.classList.add('bg-red-700', 'text-white', 'shadow-md');
+            }
+
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
+            renderMenu(cat, searchQuery);
+        }
+
+        // Render Menu Items
+        function renderMenu(category = 'all', searchQuery = '') {
+            const container = document.getElementById('menuContainer');
+            const emptyState = document.getElementById('emptySearch');
+            container.innerHTML = '';
+
+            let filtered = MENU_DATA.filter(item => {
+                const matchCat = (category === 'all') || (item.category === category);
+                const matchSearch = item.name.toLowerCase().includes(searchQuery) || item.desc.toLowerCase().includes(searchQuery);
+                return matchCat && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            // Group by category if 'all' is selected
+            const categoriesToRender = category === 'all' 
+                ? [
+                    { key: 'food', name: 'Makanan (Food)', icon: 'fa-bowl-rice', color: 'text-amber-500' },
+                    { key: 'snack', name: 'Snack', icon: 'fa-cookie-bite', color: 'text-orange-400' },
+                    { key: 'beverages', name: 'Minuman (Drinks)', icon: 'fa-mug-hot', color: 'text-teal-400' }
+                  ]
+                : [{
+                    key: category,
+                    name: category === 'food' ? 'Makanan (Food)' : category === 'snack' ? 'Snack' : 'Minuman (Drinks)',
+                    icon: category === 'food' ? 'fa-bowl-rice' : category === 'snack' ? 'fa-cookie-bite' : 'fa-mug-hot',
+                    color: category === 'food' ? 'text-amber-500' : category === 'snack' ? 'text-orange-400' : 'text-teal-400'
+                  }];
+
+            categoriesToRender.forEach(catMeta => {
+                const catItems = filtered.filter(i => i.category === catMeta.key);
+                if (catItems.length === 0) return;
+
+                const section = document.createElement('div');
+                section.className = 'space-y-3';
+
+                section.innerHTML = `
+                    <div class="flex items-center gap-2 pb-1 border-b border-gray-800">
+                        <i class="fa-solid ${catMeta.icon} ${catMeta.color} text-base"></i>
+                        <h2 class="text-sm font-bold tracking-wide uppercase text-gray-300">${catMeta.name}</h2>
+                        <span class="text-xs bg-gray-800 text-gray-400 px-2 py-0.5 rounded-full font-semibold">${catItems.length}</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5" id="grid-${catMeta.key}"></div>
+                `;
+
+                container.appendChild(section);
+
+                const grid = section.querySelector(`#grid-${catMeta.key}`);
+                catItems.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = "bg-gray-900 border border-gray-800/90 rounded-2xl p-4 flex flex-col justify-between hover:border-gray-700 transition shadow-sm hover:shadow-md";
+
+                    let priceDisplay = formatIDR(item.price);
+                    if(item.type === 'indomie') {
+                        priceDisplay = "Mulai " + formatIDR(12000);
+                    }
+
+                    card.innerHTML = `
+                        <div>
+                            <div class="flex items-start justify-between gap-2 mb-2">
+                                <div class="flex items-center gap-2.5">
+                                    <div class="text-2xl bg-gray-800/80 w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border border-gray-700/50">
+                                        ${item.image}
+                                    </div>
+                                    <div>
+                                        <h3 class="text-sm font-bold text-gray-100 leading-snug">${item.name}</h3>
+                                        <p class="text-xs font-bold text-amber-400 mt-0.5">${priceDisplay}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-400 line-clamp-2 leading-relaxed mb-4">${item.desc}</p>
+                        </div>
+
+                        <div class="pt-2 border-t border-gray-800/50 flex items-center justify-between">
+                            <span class="text-[11px] text-gray-500 font-medium">
+                                ${item.hasOptions ? '<i class="fa-solid fa-sliders text-amber-500/80 mr-1"></i>Opsi Tersedia' : 'Porsi Standar'}
+                            </span>
+                            <button onclick="handleAddToCartClick('${item.id}')" class="px-3.5 py-1.5 bg-red-800/80 hover:bg-red-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 transition active:scale-95 border border-red-600/30">
+                                <i class="fa-solid fa-plus text-xs"></i>
+                                <span>${item.hasOptions ? 'Pilih' : 'Tambah'}</span>
+                            </button>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            });
+        }
+
+        // Handle Add To Cart Button Click
+        function handleAddToCartClick(itemId) {
+            const item = MENU_DATA.find(i => i.id === itemId);
+            if (!item) return;
+
+            if (item.hasOptions) {
+                openOptionModal(item);
+            } else {
+                // Direct Add Standard Item
+                addToCart({
+                    cartId: Date.now() + Math.random().toString(36).substr(2, 4),
+                    itemId: item.id,
+                    name: item.name,
+                    basePrice: item.price,
+                    unitPrice: item.price,
+                    qty: 1,
+                    optionsText: '',
+                    note: ''
+                });
+                showToast(`<b>${item.name}</b> ditambahkan`);
+            }
+        }
+
+        // Open Option Customization Modal
+        function openOptionModal(item) {
+            currentModalItem = item;
+            modalQty = 1;
+            document.getElementById('modalQtyVal').innerText = modalQty;
+            document.getElementById('optionModalTitle').innerText = item.name;
+
+            const modalBody = document.getElementById('optionModalBody');
+            modalBody.innerHTML = '';
+
+            if (item.type === 'indomie') {
+                modalBody.innerHTML = `
+                    <div class="space-y-3">
+                        <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider">Pilih Porsi <span class="text-red-500">*</span></label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="cursor-pointer border border-gray-700 bg-gray-800 p-3 rounded-xl flex items-center justify-between has-[:checked]:border-red-500 has-[:checked]:bg-red-950/40">
+                                <div class="flex items-center gap-2">
+                                    <input type="radio" name="indomiePortion" value="single" data-price="12000" checked onchange="updateModalPrice()" class="accent-red-600">
+                                    <span class="text-xs font-bold text-gray-200">Single</span>
+                                </div>
+                                <span class="text-xs font-semibold text-amber-400">Rp 12.000</span>
+                            </label>
+                            <label class="cursor-pointer border border-gray-700 bg-gray-800 p-3 rounded-xl flex items-center justify-between has-[:checked]:border-red-500 has-[:checked]:bg-red-950/40">
+                                <div class="flex items-center gap-2">
+                                    <input type="radio" name="indomiePortion" value="double" data-price="17000" onchange="updateModalPrice()" class="accent-red-600">
+                                    <span class="text-xs font-bold text-gray-200">Double</span>
+                                </div>
+                                <span class="text-xs font-semibold text-amber-400">Rp 17.000</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 pt-2">
+                        <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider">Add-ons Tambahan (Opsional)</label>
+                        <div class="space-y-2">
+                            <label class="cursor-pointer border border-gray-800 bg-gray-950/60 p-2.5 rounded-xl flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" name="indomieAddon" value="Telur" data-price="5000" onchange="updateModalPrice()" class="accent-red-600 rounded">
+                                    <span class="text-xs text-gray-300">+ Telur</span>
+                                </div>
+                                <span class="text-xs text-amber-400/90">+Rp 5.000</span>
+                            </label>
+                            <label class="cursor-pointer border border-gray-800 bg-gray-950/60 p-2.5 rounded-xl flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" name="indomieAddon" value="Baso" data-price="6000" onchange="updateModalPrice()" class="accent-red-600 rounded">
+                                    <span class="text-xs text-gray-300">+ Baso</span>
+                                </div>
+                                <span class="text-xs text-amber-400/90">+Rp 6.000</span>
+                            </label>
+                            <label class="cursor-pointer border border-gray-800 bg-gray-950/60 p-2.5 rounded-xl flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" name="indomieAddon" value="Telur dan Baso" data-price="10000" onchange="updateModalPrice()" class="accent-red-600 rounded">
+                                    <span class="text-xs text-gray-300">+ Telur & Baso Paket Combo</span>
+                                </div>
+                                <span class="text-xs text-amber-400/90">+Rp 10.000</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">Catatan Tambahan</label>
+                        <input type="text" id="modalItemNote" placeholder="Misal: Setengah matang, sangat pedas..." class="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-xl text-xs text-white focus:outline-none focus:border-red-500">
+                    </div>
+                `;
+            } else if (item.type === 'tea') {
+                modalBody.innerHTML = `
+                    <div class="space-y-3">
+                        <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider">Pilih Penyajian <span class="text-red-500">*</span></label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="cursor-pointer border border-gray-700 bg-gray-800 p-3 rounded-xl flex items-center justify-center gap-2 has-[:checked]:border-red-500 has-[:checked]:bg-red-950/40">
+                                <input type="radio" name="teaServing" value="Ice (Dingin)" checked class="accent-red-600">
+                                <span class="text-xs font-bold text-gray-200">❄️ Ice (Dingin)</span>
+                            </label>
+                            <label class="cursor-pointer border border-gray-700 bg-gray-800 p-3 rounded-xl flex items-center justify-center gap-2 has-[:checked]:border-red-500 has-[:checked]:bg-red-950/40">
+                                <input type="radio" name="teaServing" value="Hot (Panas)" class="accent-red-600">
+                                <span class="text-xs font-bold text-gray-200">☕ Hot (Panas)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">Catatan Minuman</label>
+                        <input type="text" id="modalItemNote" placeholder="Misal: Less sugar, sedikiit es..." class="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-xl text-xs text-white focus:outline-none focus:border-red-500">
+                    </div>
+                `;
+            }
+
+            updateModalPrice();
+
+            const modal = document.getElementById('optionModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+        }
+
+        function closeOptionModal() {
+            const modal = document.getElementById('optionModal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        function changeModalQty(delta) {
+            modalQty = Math.max(1, modalQty + delta);
+            document.getElementById('modalQtyVal').innerText = modalQty;
+            updateModalPrice();
+        }
+
+        // Calculate Modal Unit & Total Price
+        function getModalCalculatedPrice() {
+            if (!currentModalItem) return 0;
+            let unitPrice = currentModalItem.price;
+
+            if (currentModalItem.type === 'indomie') {
+                const portionEl = document.querySelector('input[name="indomiePortion"]:checked');
+                if (portionEl) {
+                    unitPrice = parseInt(portionEl.getAttribute('data-price') || '12000');
+                }
+                const addonEls = document.querySelectorAll('input[name="indomieAddon"]:checked');
+                addonEls.forEach(el => {
+                    unitPrice += parseInt(el.getAttribute('data-price') || '0');
+                });
+            }
+
+            return unitPrice;
+        }
+
+        function updateModalPrice() {
+            const unitPrice = getModalCalculatedPrice();
+            const total = unitPrice * modalQty;
+            document.getElementById('modalBtnPrice').innerText = formatIDR(total);
+        }
+
+        function confirmAddOptionToCart() {
+            if (!currentModalItem) return;
+
+            let unitPrice = getModalCalculatedPrice();
+            let optionsTextArray = [];
+
+            if (currentModalItem.type === 'indomie') {
+                const portionEl = document.querySelector('input[name="indomiePortion"]:checked');
+                if (portionEl) {
+                    optionsTextArray.push(portionEl.value === 'single' ? 'Single' : 'Double');
+                }
+                const addonEls = document.querySelectorAll('input[name="indomieAddon"]:checked');
+                let addons = [];
+                addonEls.forEach(el => addons.push(el.value));
+                if (addons.length > 0) {
+                    optionsTextArray.push('+ ' + addons.join(', '));
+                }
+            } else if (currentModalItem.type === 'tea') {
+                const teaEl = document.querySelector('input[name="teaServing"]:checked');
+                if (teaEl) {
+                    optionsTextArray.push(teaEl.value);
+                }
+            }
+
+            const noteInput = document.getElementById('modalItemNote');
+            const noteVal = noteInput ? noteInput.value.trim() : '';
+
+            addToCart({
+                cartId: Date.now() + Math.random().toString(36).substr(2, 4),
+                itemId: currentModalItem.id,
+                name: currentModalItem.name,
+                basePrice: currentModalItem.price,
+                unitPrice: unitPrice,
+                qty: modalQty,
+                optionsText: optionsTextArray.join(' | '),
+                note: noteVal
+            });
+
+            closeOptionModal();
+            showToast(`<b>${currentModalItem.name}</b> ditambahkan`);
+        }
+
+        // Cart State Management
+        function addToCart(cartItem) {
+            // Check if identical item already exists in cart (same itemId, options, and notes)
+            const existingIndex = cart.findIndex(i => 
+                i.itemId === cartItem.itemId && 
+                i.optionsText === cartItem.optionsText && 
+                i.note === cartItem.note
+            );
+
+            if (existingIndex > -1) {
+                cart[existingIndex].qty += cartItem.qty;
+            } else {
+                cart.push(cartItem);
+            }
+
+            updateCartUI();
+        }
+
+        function updateCartQty(cartId, delta) {
+            const idx = cart.findIndex(i => i.cartId === cartId);
+            if (idx > -1) {
+                cart[idx].qty += delta;
+                if (cart[idx].qty <= 0) {
+                    cart.splice(idx, 1);
+                }
+            }
+            updateCartUI();
+            renderCheckoutCartItems();
+        }
+
+        function clearCart() {
+            if (cart.length === 0) return;
+            cart = [];
+            updateCartUI();
+            renderCheckoutCartItems();
+            showToast('Keranjang telah dikosongkan', 'info');
+        }
+
+        function getTotalCartCount() {
+            return cart.reduce((sum, item) => sum + item.qty, 0);
+        }
+
+        function getTotalCartPrice() {
+            return cart.reduce((sum, item) => sum + (item.unitPrice * item.qty), 0);
+        }
+
+        function updateCartUI() {
+            const totalCount = getTotalCartCount();
+            const totalPrice = getTotalCartPrice();
+
+            const badge = document.getElementById('cartBadgeCount');
+            const priceEl = document.getElementById('cartTotalPrice');
+            const floatingBar = document.getElementById('floatingCart');
+
+            badge.innerText = totalCount;
+            priceEl.innerText = formatIDR(totalPrice);
+
+            if (totalCount > 0) {
+                floatingBar.classList.remove('translate-y-full');
+            } else {
+                floatingBar.classList.add('translate-y-full');
+                closeCheckoutModal();
+            }
+
+            updateWAPreview();
+        }
+
+        // Checkout Modal Functions
+        function openCheckoutModal() {
+            if (cart.length === 0) return;
+            renderCheckoutCartItems();
+            updateWAPreview();
+
+            const modal = document.getElementById('checkoutModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+        }
+
+        function closeCheckoutModal() {
+            const modal = document.getElementById('checkoutModal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        function renderCheckoutCartItems() {
+            const listContainer = document.getElementById('checkoutItemsList');
+            const totalPayEl = document.getElementById('modalTotalPay');
+            listContainer.innerHTML = '';
+
+            totalPayEl.innerText = formatIDR(getTotalCartPrice());
+
+            if (cart.length === 0) {
+                listContainer.innerHTML = `<p class="text-xs text-gray-500 py-4 text-center">Keranjang Anda kosong.</p>`;
+                return;
+            }
+
+            cart.forEach(item => {
+                const row = document.createElement('div');
+                row.className = "bg-gray-800/60 border border-gray-700/60 p-3 rounded-xl flex items-center justify-between gap-3";
+
+                let detailsHtml = '';
+                if(item.optionsText) {
+                    detailsHtml += `<span class="text-[11px] text-amber-400 block">${item.optionsText}</span>`;
+                }
+                if(item.note) {
+                    detailsHtml += `<span class="text-[10px] text-gray-400 italic block">"${item.note}"</span>`;
+                }
+
+                row.innerHTML = `
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs font-bold text-gray-100 truncate">${item.name}</p>
+                        ${detailsHtml}
+                        <p class="text-xs text-gray-400 font-semibold mt-0.5">${formatIDR(item.unitPrice)} x ${item.qty} = <span class="text-amber-300">${formatIDR(item.unitPrice * item.qty)}</span></p>
+                    </div>
+
+                    <div class="flex items-center gap-1 bg-gray-900 rounded-lg p-1 border border-gray-700 shrink-0">
+                        <button onclick="updateCartQty('${item.cartId}', -1)" class="w-6 h-6 rounded bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-bold flex items-center justify-center transition">-</button>
+                        <span class="w-6 text-center text-xs font-bold text-white">${item.qty}</span>
+                        <button onclick="updateCartQty('${item.cartId}', 1)" class="w-6 h-6 rounded bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-bold flex items-center justify-center transition">+</button>
+                    </div>
+                `;
+
+                listContainer.appendChild(row);
+            });
+        }
+
+        // Generate WhatsApp Formatted Message
+        function generateWAMessage() {
+            const name = document.getElementById('custName').value.trim() || '[Belum diisi]';
+            const table = document.getElementById('custTable').value.trim() || '[Belum diisi]';
+            const phone = document.getElementById('custPhone').value.trim() || '[Belum diisi]';
+            const generalNotes = document.getElementById('custNotes').value.trim();
+
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+            const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+
+            let msg = `🏮 *PESANAN BARU - 8 BAMBOO MAHJONG* 🏮\n`;
+            msg += `----------------------------------------\n`;
+            msg += `🕒 *Jam Order:* ${timeStr} (${dateStr})\n`;
+            msg += `👤 *Nama:* ${name}\n`;
+            msg += `🪑 *Nomor Meja:* ${table}\n`;
+            msg += `📞 *No. HP/WA:* ${phone}\n`;
+            msg += `----------------------------------------\n\n`;
+
+            msg += `📝 *RINCIAN PESANAN:*\n`;
+
+            cart.forEach((item, idx) => {
+                msg += `${idx + 1}. *${item.name}* (x${item.qty})\n`;
+                if (item.optionsText) {
+                    msg += `   └ Opsi: ${item.optionsText}\n`;
+                }
+                if (item.note) {
+                    msg += `   └ Catatan: _${item.note}_\n`;
+                }
+                msg += `   └ Subtotal: ${formatIDR(item.unitPrice * item.qty)}\n`;
+            });
+
+            msg += `\n----------------------------------------\n`;
+            msg += `💰 *TOTAL PESANAN:* *${formatIDR(getTotalCartPrice())}*\n`;
+            msg += `----------------------------------------\n`;
+
+            if (generalNotes) {
+                msg += `\n📌 *Catatan Umum:* _${generalNotes}_\n`;
+            }
+
+            msg += `\nMohon diproses, Terima Kasih! 🙏`;
+
+            return msg;
+        }
+
+        // Live Preview WA Message
+        function updateWAPreview() {
+            const previewBox = document.getElementById('waPreviewBox');
+            if (previewBox) {
+                previewBox.innerText = generateWAMessage();
+            }
+        }
+
+        // Redirect to WhatsApp
+        function sendOrderToWhatsApp() {
+            const name = document.getElementById('custName').value.trim();
+            const table = document.getElementById('custTable').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+
+            if (!name || !table || !phone) {
+                showToast('Harap lengkapi Nama, Meja, dan No HP!', 'error');
+                return;
+            }
+
+            if (cart.length === 0) {
+                showToast('Keranjang pemesanan masih kosong!', 'error');
+                return;
+            }
+
+            const rawText = generateWAMessage();
+            const encodedText = encodeURIComponent(rawText);
+            
+            // Deep-link langsung wa.me tanpa membuka tab browser baru terlebih dahulu
+            const waUrl = `https://wa.me/${WA_TARGET_NUMBER}?text=${encodedText}`;
+
+            // Langsung membuka aplikasi WhatsApp di smartphone/perangkat
+            window.location.href = waUrl;
+        }
+
+        // Copy Text to Clipboard
+        function copyToClipboard() {
+            const text = generateWAMessage();
+            const dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = text;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+
+            showToast('Format teks berhasil disalin!');
+        }
+
+        // Helper Toast Notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastMsg.innerHTML = message;
+
+            if (type === 'error') {
+                toastIcon.className = "fa-solid fa-circle-exclamation text-red-400";
+            } else if (type === 'info') {
+                toastIcon.className = "fa-solid fa-circle-info text-blue-400";
+            } else {
+                toastIcon.className = "fa-solid fa-circle-check text-green-400";
+            }
+
+            toast.classList.remove('translate-x-full', 'opacity-0', 'pointer-events-none');
+
+            setTimeout(() => {
+                toast.classList.add('translate-x-full', 'opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
