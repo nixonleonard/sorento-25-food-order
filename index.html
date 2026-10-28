@@ -914,47 +914,31 @@
             });
         }
 
-        // Generate WhatsApp Formatted Message
+        // Generate WhatsApp Formatted Message (Sederhana & Ringkas)
         function generateWAMessage() {
-            const name = document.getElementById('custName').value.trim() || '[Belum diisi]';
-            const table = document.getElementById('custTable').value.trim() || '[Belum diisi]';
-            const phone = document.getElementById('custPhone').value.trim() || '[Belum diisi]';
+            const name = document.getElementById('custName').value.trim() || '-';
+            const table = document.getElementById('custTable').value.trim() || '-';
+            const phone = document.getElementById('custPhone').value.trim();
             const generalNotes = document.getElementById('custNotes').value.trim();
 
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
-            const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+            let msg = `*ORDER - 8 BAMBOO MAHJONG*\n\n`;
+            msg += `Nama: ${name}\n`;
+            msg += `Meja: ${table}\n`;
+            if (phone) msg += `No HP: ${phone}\n`;
 
-            let msg = `🏮 *PESANAN BARU - 8 BAMBOO MAHJONG* 🏮\n`;
-            msg += `----------------------------------------\n`;
-            msg += `🕒 *Jam Order:* ${timeStr} (${dateStr})\n`;
-            msg += `👤 *Nama:* ${name}\n`;
-            msg += `🪑 *Nomor Meja:* ${table}\n`;
-            msg += `📞 *No. HP/WA:* ${phone}\n`;
-            msg += `----------------------------------------\n\n`;
+            msg += `\n*Pesanan:*\n`;
 
-            msg += `📝 *RINCIAN PESANAN:*\n`;
-
-            cart.forEach((item, idx) => {
-                msg += `${idx + 1}. *${item.name}* (x${item.qty})\n`;
-                if (item.optionsText) {
-                    msg += `   └ Opsi: ${item.optionsText}\n`;
-                }
-                if (item.note) {
-                    msg += `   └ Catatan: _${item.note}_\n`;
-                }
-                msg += `   └ Subtotal: ${formatIDR(item.unitPrice * item.qty)}\n`;
+            cart.forEach((item) => {
+                let opt = item.optionsText ? ` (${item.optionsText})` : '';
+                let note = item.note ? ` [Catatan: ${item.note}]` : '';
+                msg += `• ${item.qty}x ${item.name}${opt}${note}\n`;
             });
 
-            msg += `\n----------------------------------------\n`;
-            msg += `💰 *TOTAL PESANAN:* *${formatIDR(getTotalCartPrice())}*\n`;
-            msg += `----------------------------------------\n`;
+            msg += `\n*Total:* ${formatIDR(getTotalCartPrice())}`;
 
             if (generalNotes) {
-                msg += `\n📌 *Catatan Umum:* _${generalNotes}_\n`;
+                msg += `\n*Catatan Tambahan:* ${generalNotes}`;
             }
-
-            msg += `\nMohon diproses, Terima Kasih! 🙏`;
 
             return msg;
         }
